@@ -3,8 +3,8 @@ import Cart from './components/Cart/Cart';
 import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import { useDispatch, useSelector } from 'react-redux';
-import { uiActions } from './store/ui';
 import Notification from './components/UI/Notification';
+import { sendCartData } from './store/cart';
 
 let isInitial = true;
 
@@ -22,39 +22,8 @@ function App() {
       return;
     }
 
-    dispatch(
-      uiActions.showNotification({
-        status: 'pending',
-        title: 'Sending...',
-        message: 'Sending cart data!',
-      })
-    );
-
-    fetch('https://testing-12da0-default-rtdb.europe-west1.firebasedatabase.app/cart.json', {
-      method: 'PUT',
-      body: JSON.stringify(items),
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Sending cart data failed.');
-        }
-        dispatch(
-          uiActions.showNotification({
-            status: 'success',
-            title: 'Success!',
-            message: 'Sent cart data successfully!',
-          })
-        );
-      })
-      .catch(err => {
-        dispatch(
-          uiActions.showNotification({
-            status: 'error',
-            title: 'Error!',
-            message: 'Sending cart data failed!',
-          })
-        );
-      });
+    dispatch(sendCartData(items));
+    
   }, [items, dispatch]);
 
   return (
